@@ -219,6 +219,27 @@ def salva_capitolato():
         citta = data['citta']
         cliente = data['cliente']
         numero_unita = data['numero_unita']
+        numero_piani = data['numero_piani']
+
+        superfici = {
+            "pavimenti_zona_giorno": data['sup_pavimenti_zona_giorno'],
+            "pavimenti_bagni": data['sup_pavimenti_bagni'],
+            "rivestimenti_bagni": data['sup_rivestimenti_bagni']
+        }
+
+        componenti = {
+            "vasi_wc": data['vasi_wc'],
+            "bidet": data['bidet'],
+            "lavabi": data['lavabi'],
+            "piatti_doccia": data['piatti_doccia'],
+            "vasca_bagno": data['vasca_bagno'],
+            "termoarredi": data['termoarredi'],
+            "miscelatori_lavabo": data['miscelatori_lavabo'],
+            "miscelatori_bidet": data['miscelatori_bidet'],
+            "gruppi_doccia": data['gruppi_doccia'],
+            "porte_interne": data['porte_interne'],
+            "maniglie_porte_interne": data['maniglie_porte_interne']
+        }
         unita_abitative = data['unita_abitative']
 
         file_name = f"{nome_intervento.replace(' ', '_')}_capitolato_{int(time.time())}.pdf"
