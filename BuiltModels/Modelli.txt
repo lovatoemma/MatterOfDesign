@@ -1,0 +1,22 @@
+Quale modello usare?
+Considerando il tipo di dati (prezzi immobiliari, zone, tipologie), il miglior approccio generalmente è:
+
+- Regressione (per prevedere il prezzo ottimale)
+
+Gradient Boosting (XGBoost, LightGBM) o Random Forest.
+
+- Classificazione (per prevedere il tipo di abitazione ottimale)
+
+Random Forest Classifier, XGBoost Classifier.
+
+- Clustering (per identificare la zona ottimale)
+
+K-Means Clustering
+
+Rendere il progetto innovativo:
+
+Dati Geospaziali: Se ottieni coordinate geografiche (latitudine/longitudine) da Immobiliare.it, puoi usare librerie come GeoPandas per analisi spaziali più avanzate (es. vicinanza a servizi, parchi, trasporti) e clustering spaziale (es. DBSCAN).
+Fonti Dati Esterne: Integra dati socio-economici ISTAT per comune/provincia, dati sui punti di interesse (OpenStreetMap), o trend di mercato per arricchire il modello.
+Modelli Avanzati: Per dati non strutturati come descrizioni testuali o immagini (se disponibili da Immobiliare.it), potresti esplorare tecniche di NLP (Natural Language Processing) o Computer Vision (Deep Learning).
+Investment Score: Invece di output separati, potresti combinare le predizioni (prezzo, tipo, potenziale di crescita della zona) in un unico "indice di attrattività dell'investimento".
+Interpretabilità (XAI): Usa tecniche come SHAP o LIME per spiegare le previsioni dei modelli. Questo è cruciale per guadagnare la fiducia degli investitori, mostrando perché il modello suggerisce una certa zona o tipologia.
