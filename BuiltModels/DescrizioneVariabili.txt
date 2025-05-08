@@ -1,0 +1,20 @@
+# Variabili COMUNE: 
+fascia_x e fascia_y: fascia di appartenenza dell'immobile
+zona e linkzona: Codice o nome della zona OMI + identificativo zona
+cod_tip: codice numerico per la tipolgia
+descr_tipologia: descrizione testuale della tipologia
+stato: stato di conservazione dell'immobile
+stato_prev_x e stato_prev_y: cordinate stato di conservazione prevalente 
+compr_min e compr_max: Prezzo minimo e massimo di compravendita (€/mq)
+loc_min e loc_max: Canone minimo e massimo di locazione (€/mq/mese).
+sup_nl_loc: Superficie netta per la locazione.
+semestre: Semestre di riferimento della rilevazione
+zona_descr: Descrizione testuale della zona.
+cod_tip_prev e descr_tip_prev: Codice e descrizione della tipologia prevalente
+microzona: Codice o identificativo della microzona.
+
+# Variabili PROVINCIA = variabili comune +
+comune_istat_x e comune_istat_y: Codice ISTAT del comune
+comune_cat_x e comune_cat_y: Codice catastale del comune
+comune_amm_x e comune_amm_y:Codice amministrativo del comune
+comune_descrizione_x e comune_descrizione_y: Nome del comune

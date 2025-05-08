@@ -12,30 +12,42 @@ import joblib
 import time
 
 # Caricamento dati
-df_comune = pd.read_csv('DatiOMI_Unificato_comune.csv', delimiter=';')
+# df_comune = pd.read_csv('DatiOMI_Unificato_comune.csv', delimiter=';')
+# Variabili COMUNE: fascia_x, zona, linkzona, cod_tip, descr_tipologia, stato, stato_prev_x,
+# compr_min, compr_max, loc_min, loc_max, sup_nl_loc, semestre, 
+# fascia_y, zona_descr, cod_tip_prev, descr_tip_prev, stato_prev_y, microzona
+
+
 df_provincia = pd.read_csv('DatiOMI_Unificato_prov.csv', delimiter=';')
+# Variabili PROVINCIA: comune_istat_x, comune_cat_x, comune_amm_x, comune_descrizione_x,
+# fascia_x, zona, linkzona, cod_tip, descr_tipologia, stato, stato_prev,
+# compr_min, compr_max, loc_min, loc_max, sup_nl_loc, semestre, 
+# comune_istat_y, comune_cat_y, comune_amm_y, comune_descrizione_y,
+# fascia_y, zona_descr, cod_tip_prev, descr_tip_prev, stato_prev_y, microzona
+
+df = df_provincia.copy()  # Inizialmente lavora solo con df_provincia
 
 # Ispezione e concatenazione gestendo colonne diverse
-print("Colonne df_comune:", df_comune.columns.tolist())
-print("Colonne df_provincia:", df_provincia.columns.tolist())
-common_cols = list(set(df_comune.columns) & set(df_provincia.columns))
-print("\nColonne comuni:", common_cols)
-unique_comune_cols = list(set(df_comune.columns) - set(df_provincia.columns))
-print("Colonne uniche df_comune:", unique_comune_cols)
-unique_provincia_cols = list(set(df_provincia.columns) - set(df_comune.columns))
-print("Colonne uniche df_provincia:", unique_provincia_cols)
+#print("Colonne df_comune:", df_comune.columns.tolist())
+#print("Colonne df_provincia:", df_provincia.columns.tolist())
+#common_cols = list(set(df_comune.columns) & set(df_provincia.columns))
+#print("\nColonne comuni:", common_cols)
+#unique_comune_cols = list(set(df_comune.columns) - set(df_provincia.columns))
+#print("Colonne uniche df_comune:", unique_comune_cols)
+#unique_provincia_cols = list(set(df_provincia.columns) - set(df_comune.columns))
+#print("Colonne uniche df_provincia:", unique_provincia_cols)
 
-df_comune['livello'] = 'comune'
-df_provincia['livello'] = 'provincia'
+#df_comune['livello'] = 'comune'
+#df_provincia['livello'] = 'provincia'
 
-df = pd.concat([df_comune, df_provincia], ignore_index=True, sort=False)
+#df = pd.concat([df_comune, df_provincia], ignore_index=True, sort=False)
 
 print("\nInfo sul DataFrame combinato:")
 df.info()
 print("\nValori mancanti per colonna nel DataFrame combinato (prime 20):")
 print(df.isnull().sum().sort_values(ascending=False).head(20))
 
-# --- Feature Engineering ---
+# Feature Engineering 
 required_cols_range = ['compr_min', 'compr_max']
 if all(col in df.columns for col in required_cols_range):
     for col in required_cols_range:
