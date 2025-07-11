@@ -1,17 +1,32 @@
 Quale modello usare?
-Considerando il tipo di dati (prezzi immobiliari, zone, tipologie), il miglior approccio generalmente è:
+GESTIONE DATASET:
+Training set: 80% del dataset originale.
+Test set: 20% del dataset originale.
 
-- Regressione (per prevedere il prezzo ottimale)
+- Regressione (per prevedere il prezzo ottimale) senza tuning:
+    Linear Regression, LightGBM, Random Forest Regressor.
 
-Gradient Boosting (XGBoost, LightGBM) o Random Forest.
+- Classificazione (per prevedere il tipo di abitazione ottimale) senza tuning:
+    Logistic Regression, Random Forest Classifier, LightGBM Classifier.
 
-- Classificazione (per prevedere il tipo di abitazione ottimale)
 
-Random Forest Classifier, XGBoost Classifier.
+RISULTATI:
+- Classificazione:
+    Logistic Regression: Accuracy ≈ 0.420
+    Random Forest: Accuracy ≈ 0.418
+    LightGBM: Accuracy ≈ 0.445
 
-- Clustering (per identificare la zona ottimale)
+- Regressione:
+    Linear Regression: MSE ≈ 60969, R2 Score ≈ 0.851
+    Random Forest: MSE ≈ 66000, R2 Score ≈ 0.839
+    LightGBM: MSE ≈ 25927, R2 Score ≈ 0.937
 
-K-Means Clustering
+
+- PROVA DI HYPERPARAMETER TUNING PER TUTTI I MODELLI + UTILIZZO DI 5-FOLD-CROSS-VALIDATION
+
+
+
+
 
 Rendere il progetto innovativo:
 

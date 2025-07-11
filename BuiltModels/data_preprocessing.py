@@ -30,21 +30,23 @@ import joblib
 # Percorso della cartella con i file
 cartella_dati = "C:/Users/emmal/Desktop/STAGE/PROGETTO/DatiOMI/VERONA_prov"
 
+
 # Dizionari con i nomi dei file
 files_valori = {
-    "2023_1": os.path.join(cartella_dati, "QI_1137009_1_20231_VALORI.csv"),
-    "2023_2": os.path.join(cartella_dati, "QI_1137007_1_20232_VALORI.csv"),
-    "2024_1": os.path.join(cartella_dati, "QI_1137006_1_20241_VALORI.csv"),
-    "2024_2": os.path.join(cartella_dati, "QIP_1184581_1_20242_VALORI.csv")
+    "2023_1": os.path.join(cartella_dati, "QI_1201235_1_20231_VALORI.csv"),
+    "2023_2": os.path.join(cartella_dati, "QIP_1201216_1_20232_VALORI.csv"),
+    "2024_1": os.path.join(cartella_dati, "QI_1201237_1_20241_VALORI.csv"),
+    "2024_2": os.path.join(cartella_dati, "QI_1201238_1_20242_VALORI.csv")
 
 }
 
 files_zone = {
-    "2023_1": os.path.join(cartella_dati, "QI_1137009_1_20231_ZONE.csv"),
-    "2023_2": os.path.join(cartella_dati, "QI_1137007_1_20232_ZONE.csv"),
-    "2024_1": os.path.join(cartella_dati, "QI_1137006_1_20241_ZONE.csv"),
-    "2024_2": os.path.join(cartella_dati, "QIP_1184581_1_20242_ZONE.csv")
+    "2023_1": os.path.join(cartella_dati, "QI_1201235_1_20231_ZONE.csv"),
+    "2023_2": os.path.join(cartella_dati, "QIP_1201216_1_20232_ZONE.csv"),
+    "2024_1": os.path.join(cartella_dati, "QI_1201237_1_20241_ZONE.csv"),
+    "2024_2": os.path.join(cartella_dati, "QI_1201238_1_20242_ZONE.csv")
 }
+
 
 # 2. Funzione Generica per Caricare un CSV
 def carica_csv(file_path, semestre):

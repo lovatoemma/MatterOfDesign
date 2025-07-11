@@ -4,7 +4,7 @@ zona e linkzona: Codice o nome della zona OMI + identificativo zona
 cod_tip: codice numerico per la tipolgia
 descr_tipologia: descrizione testuale della tipologia
 stato: stato di conservazione dell'immobile
-stato_prev_x e stato_prev_y: cordinate stato di conservazione prevalente 
+stato_prev_x e stato_prev_y: coordinate stato di conservazione prevalente 
 compr_min e compr_max: Prezzo minimo e massimo di compravendita (€/mq)
 loc_min e loc_max: Canone minimo e massimo di locazione (€/mq/mese).
 sup_nl_loc: Superficie netta per la locazione.
