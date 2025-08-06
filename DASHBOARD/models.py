@@ -13,7 +13,7 @@ import joblib
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# SOSTITUISCI LA VECCHIA FUNZIONE CON QUESTA
+# SOSTITUISCO LA VECCHIA FUNZIONE CON QUESTA
 def _select_and_ravel_text_column(X_input):
     """
     Gestisce input di tipo DataFrame, Serie o array NumPy, 

@@ -4,8 +4,14 @@ import torch
 import torch.nn as nn
 import joblib
 import time
-import os # <<< MODIFICA: Importa la libreria OS per gestire i percorsi
+import os
 import numpy as np
+import sys # <<< MODIFICA CHIAVE 1
+
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+# Ora l'import di 'models' (fatto internamente da joblib) funzionerà.
 
 # ===================================================================
 # CONFIGURAZIONE PAGINA
@@ -16,7 +22,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# <<< MODIFICA: Crea un percorso base che funziona ovunque (locale e cloud)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # ===================================================================
@@ -44,7 +49,6 @@ def load_model_artifacts():
         num_classes = 5
         model = ClassificationNN_v2(input_size=input_size, num_classes=num_classes)
         
-        # <<< MODIFICA: Aggiunge il percorso base a ogni file
         model_path = os.path.join(BASE_DIR, 'pytorch_model_state.pth')
         preprocessor_path = os.path.join(BASE_DIR, 'preprocessor_torch.joblib')
         encoder_path = os.path.join(BASE_DIR, 'label_encoder_pers.joblib')
@@ -58,28 +62,27 @@ def load_model_artifacts():
         
         return model, preprocessor, label_encoder, model_columns
     except Exception as e:
-        st.error(f"⚠️ Errore caricamento artefatti: {e}. Controlla che i file siano nella stessa cartella dello script su GitHub.")
-        return None, None, None, None
+        st.error(f"⚠️ Errore caricamento artefatti: {e}. Controlla che tutti i file (incluso models.py) siano nella cartella 'DASHBOARD' su GitHub.")
+        st.stop()
 
 @st.cache_data
 def load_main_data():
     """Carica il singolo file CSV pre-processato."""
     try:
-        # <<< MODIFICA: Aggiunge il percorso base al file CSV
         csv_path = os.path.join(BASE_DIR, 'DatiCompletiPuliti.csv')
         df = pd.read_csv(csv_path, sep=';', encoding='latin1')
         df.rename(columns={'comune_descrizione_val': 'comune_descrizione'}, inplace=True, errors='ignore')
         return df
     except FileNotFoundError:
         st.error(f"⚠️ File 'DatiCompletiPuliti.csv' non trovato. Assicurati che sia stato caricato su GitHub nella cartella 'DASHBOARD'.")
-        return None
+        st.stop()
 
 # Caricamento di tutto il necessario
 model, preprocessor, label_encoder, model_columns = load_model_artifacts()
 main_df = load_main_data()
 
 # ===================================================================
-# IL RESTO DELLO SCRIPT RIMANE IDENTICO...
+# IL RESTO DELLO SCRIPT È IDENTICO E ORA FUNZIONERÀ
 # ===================================================================
 st.sidebar.title("Parametri di Analisi")
 st.sidebar.info("Seleziona una zona per scoprire la tipologia di immobile con il più alto potenziale di investimento.")
@@ -105,7 +108,6 @@ st.title("💡 Dashboard di Analisi Strategica per Investimenti Immobiliari")
 st.markdown("---")
 
 if analyze_button:
-    # (Il resto del codice rimane invariato, non serve copiarlo di nuovo)
     with st.spinner('Il motore sta simulando diversi scenari di investimento...'):
         risultati = []
         tipologie_da_testare = ['Abitazioni civili', 'Ville e Villini', 'Negozi', 'Uffici', 'Box', 'Magazzini', 'Capannoni tipici']
