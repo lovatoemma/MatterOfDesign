@@ -13,21 +13,26 @@ import joblib
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+# SOSTITUISCI LA VECCHIA FUNZIONE CON QUESTA
 def _select_and_ravel_text_column(X_input):
-    if isinstance(X_input, pd.DataFrame):
-        series = X_input.iloc[:, 0]
-    elif isinstance(X_input, np.ndarray):
-        if X_input.ndim == 2 and X_input.shape[1] >= 1:
-            series = X_input[:, 0]
-        elif X_input.ndim == 1:
-            series = X_input
+    """
+    Gestisce input di tipo DataFrame, Serie o array NumPy, 
+    restituendo un array 1D di stringhe.
+    """
+    # Se l'input è un DataFrame o una Serie pandas
+    if isinstance(X_input, (pd.DataFrame, pd.Series)):
+        if isinstance(X_input, pd.DataFrame):
+            series = X_input.iloc[:, 0]
         else:
-            raise ValueError(f"Input array per processamento testuale ha forma inattesa: {X_input.shape}")
-    elif isinstance(X_input, pd.Series):
-        series = X_input
+            series = X_input
+    # Se l'input è un array NumPy
+    elif isinstance(X_input, np.ndarray):
+        series = pd.Series(X_input.ravel())
     else:
-        raise TypeError(f"Tipo inatteso per processamento testuale: {type(X_input)}")
-    return pd.Series(series).fillna('').astype(str).values
+        raise TypeError(f"Tipo di input non gestito per la colonna di testo: {type(X_input)}")
+    
+    # Restituisce i valori come stringhe, gestendo i NaN
+    return series.fillna('').astype(str).values
 
 def create_preprocessor(numerical_cols, categorical_cols, text_col_name=None, **kwargs):
     transformers_list = []
