@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 import joblib
 import time
-import os
+import os # <<< MODIFICA: Importa la libreria OS per gestire i percorsi
 import numpy as np
 
 # ===================================================================
@@ -15,6 +15,9 @@ st.set_page_config(
     page_icon="💡",
     layout="wide"
 )
+
+# <<< MODIFICA: Crea un percorso base che funziona ovunque (locale e cloud)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # ===================================================================
 # DEFINIZIONE DEL MODELLO
@@ -35,31 +38,40 @@ class ClassificationNN_v2(nn.Module):
 # ===================================================================
 @st.cache_resource
 def load_model_artifacts():
-    """Carica TUTTI gli artefatti del modello, incluso il contratto delle colonne."""
+    """Carica TUTTI gli artefatti del modello usando percorsi robusti."""
     try:
         input_size = 215
         num_classes = 5
         model = ClassificationNN_v2(input_size=input_size, num_classes=num_classes)
-        model.load_state_dict(torch.load('pytorch_model_state.pth', map_location=torch.device('cpu')))
+        
+        # <<< MODIFICA: Aggiunge il percorso base a ogni file
+        model_path = os.path.join(BASE_DIR, 'pytorch_model_state.pth')
+        preprocessor_path = os.path.join(BASE_DIR, 'preprocessor_torch.joblib')
+        encoder_path = os.path.join(BASE_DIR, 'label_encoder_pers.joblib')
+        columns_path = os.path.join(BASE_DIR, 'model_columns.joblib')
+
+        model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
         model.eval()
-        preprocessor = joblib.load('preprocessor_torch.joblib')
-        label_encoder = joblib.load('label_encoder_pers.joblib')
-        model_columns = joblib.load('model_columns.joblib')
+        preprocessor = joblib.load(preprocessor_path)
+        label_encoder = joblib.load(encoder_path)
+        model_columns = joblib.load(columns_path)
+        
         return model, preprocessor, label_encoder, model_columns
     except Exception as e:
-        st.error(f"⚠️ Errore caricamento artefatti: {e}. Assicurati che 'model_columns.joblib' e gli altri file del modello siano presenti.")
+        st.error(f"⚠️ Errore caricamento artefatti: {e}. Controlla che i file siano nella stessa cartella dello script su GitHub.")
         return None, None, None, None
 
 @st.cache_data
 def load_main_data():
     """Carica il singolo file CSV pre-processato."""
     try:
-        # Assicurati che il nome del file corrisponda a quello che hai salvato dal notebook
-        df = pd.read_csv('DatiCompletiPuliti.csv', sep=';', encoding='latin1')
+        # <<< MODIFICA: Aggiunge il percorso base al file CSV
+        csv_path = os.path.join(BASE_DIR, 'DatiCompletiPuliti.csv')
+        df = pd.read_csv(csv_path, sep=';', encoding='latin1')
         df.rename(columns={'comune_descrizione_val': 'comune_descrizione'}, inplace=True, errors='ignore')
         return df
     except FileNotFoundError:
-        st.error("⚠️ File 'DatiCompletiPuliti.csv' non trovato. Assicurati che sia nella stessa cartella della dashboard.")
+        st.error(f"⚠️ File 'DatiCompletiPuliti.csv' non trovato. Assicurati che sia stato caricato su GitHub nella cartella 'DASHBOARD'.")
         return None
 
 # Caricamento di tutto il necessario
@@ -67,7 +79,7 @@ model, preprocessor, label_encoder, model_columns = load_model_artifacts()
 main_df = load_main_data()
 
 # ===================================================================
-# INTERFACCIA UTENTE (SIDEBAR)
+# IL RESTO DELLO SCRIPT RIMANE IDENTICO...
 # ===================================================================
 st.sidebar.title("Parametri di Analisi")
 st.sidebar.info("Seleziona una zona per scoprire la tipologia di immobile con il più alto potenziale di investimento.")
@@ -86,31 +98,26 @@ if main_df is not None and model is not None:
         
         analyze_button = st.button('Analizza Potenziale di Investimento', type="primary", use_container_width=True)
 else:
-    st.sidebar.error("Applicazione non inizializzata. Controllare i file mancanti.")
+    st.sidebar.error("Applicazione non inizializzata. Controllare gli errori nel pannello principale.")
     analyze_button = False
 
-# ===================================================================
-# PAGINA PRINCIPALE E LOGICA DI PREVISIONE
-# ===================================================================
 st.title("💡 Dashboard di Analisi Strategica per Investimenti Immobiliari")
 st.markdown("---")
 
 if analyze_button:
+    # (Il resto del codice rimane invariato, non serve copiarlo di nuovo)
     with st.spinner('Il motore sta simulando diversi scenari di investimento...'):
         risultati = []
         tipologie_da_testare = ['Abitazioni civili', 'Ville e Villini', 'Negozi', 'Uffici', 'Box', 'Magazzini', 'Capannoni tipici']
 
-        # Prepara un dizionario di valori di default plausibili basato sulle colonne del modello
         default_values = {col: 0 for col in model_columns if np.issubdtype(main_df.get(col, pd.Series(0)).dtype, np.number)}
         for col in model_columns:
             if col not in default_values:
                 default_values[col] = ''
 
         for tipologia_test in tipologie_da_testare:
-            # Crea un DataFrame di input che rispetta SEMPRE il contratto delle colonne
             input_data = pd.DataFrame([default_values], columns=model_columns)
             
-            # Popola il DataFrame con i valori della simulazione corrente
             input_data['descr_tipologia'] = tipologia_test
             input_data['comune_descrizione'] = comune_selezionato
             input_data['zona_descr'] = zona_selezionata
@@ -118,7 +125,6 @@ if analyze_button:
             input_data['sup_tot_imm'] = sup_tot_imm
             input_data['sup_nl_loc'] = sup_tot_imm * 0.9
             
-            # Popola le altre colonne con valori di riferimento presi dalla zona, se disponibili
             template_row = main_df[(main_df['comune_descrizione'] == comune_selezionato) & (main_df['zona_descr'] == zona_selezionata)]
             if not template_row.empty:
                 for col in input_data.columns:
@@ -135,7 +141,6 @@ if analyze_button:
             except Exception as e:
                 st.warning(f"Impossibile analizzare '{tipologia_test}'. Errore: {e}", icon="⚠️")
         
-    # --- VISUALIZZAZIONE RISULTATI ---
     if risultati:
         st.header(f"📈 Risultati per: {zona_selezionata} ({comune_selezionato})")
         df_risultati = pd.DataFrame()
@@ -158,4 +163,4 @@ if analyze_button:
 
 else:
     if main_df is not None:
-        st.info("👈 **Utilizza il pannello a sinistra** per avviare l'analisi strategica.")      
+        st.info("👈 **Utilizza il pannello a sinistra** per avviare l'analisi strategica.")
